@@ -1,7 +1,11 @@
 test:
-	sgrep-lint --validate --config=./python .
-	sgrep-lint --validate --config=./c .
-	sgrep-lint --validate --config=./javascript .
-	sgrep-lint --validate --config=./java .
-	sgrep-lint --validate --config=./go .
-	./test.py --strict --ignore-todo .
+	semgrep --validate --config=$$PWD/python $$PWD
+	semgrep --validate --config=$$PWD/c $$PWD
+	semgrep --validate --config=$$PWD/javascript $$PWD
+	semgrep --validate --config=$$PWD/java $$PWD
+	semgrep --validate --config=$$PWD/go $$PWD
+	semgrep --validate --config=$$PWD/ocaml $$PWD
+	semgrep --test --strict --test-ignore-todo --dangerously-allow-arbitrary-code-execution-from-rules $$PWD
+
+output:
+	semgrep --test --strict --test-ignore-todo --dangerously-allow-arbitrary-code-execution-from-rules --save-test-output-tar $$PWD

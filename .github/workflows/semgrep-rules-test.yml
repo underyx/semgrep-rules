@@ -1,0 +1,35 @@
+name: semgrep-rules-test
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop]
+
+jobs:
+  test-latest:
+    runs-on: ubuntu-latest
+    name: test-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: test-latest
+      id: test-latest
+      uses: returntocorp/semgrep-rules-test-action@master
+  test-develop:
+    runs-on: ubuntu-latest
+    name: test-develop
+    steps:
+    - uses: actions/checkout@v2
+    - name: test-develop
+      id: test-develop
+      uses: returntocorp/semgrep-rules-test-action-develop@master
+    - uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: tests
+        path: ${{ steps.test-develop.outputs.output_dir }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: semgrep_runs
+        path: semgrep_runs_output.tar.gz
+        if-no-files-found: error
