@@ -1,0 +1,18 @@
+rules:
+- id: greek-fashion-police-violation
+  languages: [json]
+  message: >-
+    You're not supposed to go out in pants in the Mediterranean.
+  metadata:
+    supersemgrep.loader: images
+  patterns:
+  - pattern-inside: >-
+      {"landmarks": [{"lat": $LATITUDE, ...}, ...], ...}
+  - metavariable-comparison:
+      metavariable: $LATITUDE
+      comparison: -40 < $LATITUDE and $LATITUDE < 40
+  - pattern-inside: >-
+      {"name": "Person", ...}
+  - pattern: >-
+      "name": "Pants"
+  severity: ERROR

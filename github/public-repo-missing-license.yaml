@@ -1,0 +1,22 @@
+rules:
+- id: public-repo-missing-license
+  languages:
+  - json
+  message: >-
+    The $NAME repo is public but doesn't have a license.
+    Add a LICENSE via $URL/community/license/new
+  metadata:
+    supersemgrep.loader: github_repos
+  patterns:
+  - pattern-inside: >-
+      {
+        ...,
+        "__typename": "Repository",
+        "nameWithOwner": "$NAME",
+        "isArchived": false,
+        "isPrivate": false,
+        "url": "$URL",
+        ...
+      }
+  - pattern: '"licenseInfo": null'
+  severity: ERROR

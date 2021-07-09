@@ -1,0 +1,13 @@
+rules:
+- id: cat-in-the-hat-attack
+  languages: [json]
+  message: >-
+    I would like to inform you that this cat right here… is wearing a hat.
+  metadata:
+    supersemgrep.loader: images
+  patterns:
+  - pattern-inside: >-
+      {"name": "Cat", ...}
+  - pattern: >-
+      "name": "Hat"
+  severity: INFO

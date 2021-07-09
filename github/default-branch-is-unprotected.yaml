@@ -1,0 +1,40 @@
+rules:
+- id: default-branch-is-unprotected
+  languages:
+  - json
+  message: >-
+    The $NAME repo's default branch is not protected.
+    Protect it via $URL/settings/branch_protection_rules/new
+  metadata:
+    supersemgrep.loader: github_repos
+  patterns:
+  - pattern-inside: >-
+      {
+        "__typename": "Repository",
+        "nameWithOwner": "$NAME",
+        "isArchived": false,
+        "isPrivate": false,
+        "url": "$URL",
+        "defaultBranchRef": {"name": $DEFAULT_BRANCH, ...},
+        ...
+      }
+  - pattern: >-
+      "branchProtectionRules": ...
+  - pattern-not: >-
+      "branchProtectionRules": {
+        "nodes": [
+          {
+            "matchingRefs": {
+              "nodes": [
+                {"name": $DEFAULT_BRANCH},
+                ...
+              ],
+              ...
+            },
+            ...
+          },
+          ...
+        ],
+        ...
+      }
+  severity: ERROR

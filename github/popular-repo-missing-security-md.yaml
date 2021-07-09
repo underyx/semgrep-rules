@@ -1,0 +1,25 @@
+rules:
+- id: popular-repo-missing-security-md
+  languages:
+  - json
+  message: >-
+    The $NAME repo is popular (has $STAR_COUNT stars) but has no security reports policy.
+    Add a SECURITY.md file via $URL/security/policy
+  metadata:
+    supersemgrep.loader: github_repos
+  patterns:
+  - pattern-inside: >-
+      {
+        "__typename": "Repository",
+        "nameWithOwner": "$NAME",
+        "isArchived": false,
+        "isPrivate": false,
+        "stargazerCount": $STAR_COUNT,
+        "url": "$URL",
+        ...
+      }
+  - metavariable-comparison:
+      metavariable: $STAR_COUNT
+      comparison: $STAR_COUNT >= 100
+  - pattern: '"isSecurityPolicyEnabled": false'
+  severity: ERROR
